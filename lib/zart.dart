@@ -1,9 +1,8 @@
 library zart_prujohn;
 
-import 'dart:json';
-import 'dart:isolate';
+import 'dart:async';
+import 'dart:convert' show JSON;
 import 'dart:math';
-import 'package:drandom/drandom.dart';
 
 part 'src/header.dart';
 part 'src/_stack.dart';
@@ -88,13 +87,12 @@ class ZMachine
 
     _ver = ZVersion.intToVer(_rawBytes[Header.VERSION]);
 
-    var result = _supportedMachines
-                    .filter(((Machine m) => m.version == _ver));
+    var result = _supportedMachines.where((Machine m) => m.version == _ver);
 
     if (result.length != 1){
       throw new Exception('Z-Machine version ${_ver} not supported.');
     }else{
-      machine = result[0] as Machine;
+      machine = result.first as Machine;
     }
 
     print('Zart: Using Z-Machine v${machine.version}.');
@@ -106,7 +104,7 @@ class ZMachine
     isLoaded = true;
   }
 
-  callAsync(func()) => new Timer(0, (foo) => func());
+  callAsync(func()) => new Future.microtask(() => func());
 
   /**
   * Runs the Z-Machine using the detected machine version from the story
@@ -160,7 +158,7 @@ class ZMachine
 
     msg.addAll(messageData);
 
-    return IOConfig.command(JSON.stringify(msg));
+    return IOConfig.command(JSON.encode(msg));
   }
 
   void _printBuffer(){
@@ -189,7 +187,7 @@ class ZMachine
 
   void _assertLoaded(){
     if (!isLoaded){
-      throw const Exception('Z-Machine state not loaded. Use load() first.');
+      throw new StateError('Z-Machine state not loaded. Use load() first.');
     }
   }
 }
@@ -227,7 +225,7 @@ class ZVersion{
       case 7: return ZVersion.V7;
       case 8: return ZVersion.V8;
       default:
-        throw const Exception("Version number not recognized.");
+        throw new ArgumentError("Version number not recognized.");
     }
   }
 }

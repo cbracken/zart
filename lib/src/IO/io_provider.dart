@@ -47,6 +47,7 @@ class IOCommands{
       case "PRINT_DEBUG": return IOCommands.PRINT_DEBUG;
       case "ASYNC": return IOCommands.ASYNC;
       case "SET_CURSOR": return IOCommands.SET_CURSOR;
+      default: throw new ArgumentError(cmd);
     }
   }
 

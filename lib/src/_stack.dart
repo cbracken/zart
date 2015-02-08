@@ -64,7 +64,7 @@ class _Stack {
       value = Machine.dartSignedIntTo16BitSigned(value);
     }
 
-    _stack.insertRange(0, 1, value);
+    _stack.insert(0, value);
   }
 
   int peek(){

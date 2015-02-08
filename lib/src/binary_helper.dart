@@ -4,10 +4,10 @@ part of zart_prujohn;
 class BinaryHelper {
 
   /// Returns true if bit is set in [n] at [bitPosition].
-  static bool isSet(num n, int bitPosition) => ((n >> bitPosition) & 1) == 1;
+  static bool isSet(int n, int bitPosition) => ((n >> bitPosition) & 1) == 1;
 
   /// Returns the bottom [bits] bits from [n].
-  static int bottomBits(num n, int bits) => n & ((pow(2, bits)) - 1);
+  static int bottomBits(int n, int bits) => n & ((pow(2, bits)) - 1);
 
   /// Returns an int with the given [numBits] set at the bottom.
   static int setBottomBits(int numBits){
@@ -22,12 +22,12 @@ class BinaryHelper {
     return i;
   }
 
-  static num set(num n, int bit){
+  static num set(int n, int bit){
     n |= (1 << bit);
     return n;
   }
 
-  static num unset(num n, int bit){
+  static num unset(int n, int bit){
     n &= ~(1 << bit);
     return n;
   }

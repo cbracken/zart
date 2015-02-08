@@ -114,7 +114,7 @@ class Dictionary {
         tokens.add(c.trim());
       }
       else{
-        s.add(c);
+        s.write(c);
       }
     }
 
@@ -128,10 +128,10 @@ class Dictionary {
   String dump(){
     var s = new StringBuffer();
 
-    s.add('entries: ${entries.length}\n');
-    s.add('separators: ${separators}\n');
-    s.add('word size: $entryLength \n');
-    s.add('$entries \n');
+    s.write('entries: ${entries.length}\n');
+    s.write('separators: ${separators}\n');
+    s.write('word size: $entryLength \n');
+    s.write('$entries \n');
     return s.toString();
   }
 }

@@ -16,7 +16,7 @@ class ZChar{
      // print('${word.toRadixString(2)}');
     }
 
-  Collection<int> toCollection() => [z1, z2, z3];
+  List<int> toList() => [z1, z2, z3];
 
 }
 
@@ -100,7 +100,7 @@ class ZSCII {
       if (nextz.z1 == 0 && nextz.z1 == 0 && nextz.z3 == 1){
         continue;
       }else{
-        charList.addAll(nextz.toCollection());
+        charList.addAll(nextz.toList());
       }
     }
 
@@ -127,7 +127,7 @@ class ZSCII {
         String abbrString = readZString(abbrAddress);
         Z.machine.callStack.pop();
 
-        s.add(abbrString);
+        s.write(abbrString);
 
         currentAlphabet = ZSCII.A0;
         continue;
@@ -135,7 +135,7 @@ class ZSCII {
 
       if (currentAlphabet == ZSCII.A2 && char == 6){
         // (ref 3.4)
-        s.add(ZCharToChar((charList[i + 1] << 5) | charList[i + 2]));
+        s.write(ZCharToChar((charList[i + 1] << 5) | charList[i + 2]));
         i += 2;
         currentAlphabet = ZSCII.A0;
         continue;
@@ -144,14 +144,14 @@ class ZSCII {
       if (currentAlphabet == ZSCII.A2 && char == 7){
         // (ref 3.5.3)
         //newline
-        s.add('\n');
+        s.write('\n');
         currentAlphabet = ZSCII.A0;
         continue;
       }
 
       // (ref 3.5.1)
       if (char == 0){
-        s.add(' ');
+        s.write(' ');
       }else if (char == 4){
         currentAlphabet = ZSCII.A1;
       }
@@ -164,7 +164,7 @@ class ZSCII {
         if (Z.machine.version.toInt() >= 5 && alternateTable > 0){
           Debugger.todo('alternate ZSCII table lookup');
         }else{
-          s.add(DEFAULT_TABLE[currentAlphabet][char - 6]);
+          s.write(DEFAULT_TABLE[currentAlphabet][char - 6]);
           currentAlphabet = ZSCII.A0;
         }
       }
@@ -192,7 +192,7 @@ class ZSCII {
     }else if (c == '\n'){
       return 13;
     }else{
-      var cc = c.charCodeAt(0);
+      var cc = c.codeUnitAt(0);
       if (cc >= 32 && cc <= 126){
         return cc;
       }else if (cc >= 155 && cc <= 223){
@@ -213,9 +213,9 @@ class ZSCII {
     }else if (c == 13){
       return '\n';
     }else if (c >= 32 && c <= 126){
-      return new StringBuffer().addCharCode(c).toString();
+      return (new StringBuffer()..writeCharCode(c)).toString();
     }else if (c >= 155 && c <= 223){
-      return new StringBuffer().addCharCode(UNICODE_TRANSLATIONS['$c']).toString();
+      return (new StringBuffer()..writeCharCode(UNICODE_TRANSLATIONS['$c'])).toString();
     }
 
     throw new GameException('Could not convert from ZChar to char.');

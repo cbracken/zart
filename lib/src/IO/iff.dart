@@ -31,7 +31,7 @@ class IFF {
     var s = new StringBuffer();
 
     for(int i = 0; i < 4; i++){
-      s.addCharCode(nextByte(stream));
+      s.writeCharCode(nextByte(stream));
     }
 
     return Chunk.toChunk(s.toString());
@@ -126,7 +126,7 @@ class Chunk{
 
   String toString() => _str;
 
-  List<int> charCodes() => _str.charCodes;
+  List<int> charCodes() => _str.codeUnits;
 
   static Chunk toChunk(String chunk){
     switch(chunk){

@@ -1,7 +1,8 @@
 library z_console;
 
+import 'dart:async';
 import 'dart:io';
-import 'dart:json';
+import 'dart:convert';
 import 'package:zart/zart.dart';
 
 part 'console_provider.dart';
@@ -15,11 +16,9 @@ part 'console_provider.dart';
 // VM:
 // dart ZConsole.dart path/to/minizork.z3
 
-void main() {
+void main(List<String> args) {
 
   var defaultGameFile = 'example\\games${Platform.pathSeparator}minizork.z3';
-
-  var args = new Options().arguments;
 
   File f = (args.isEmpty) ? new File(defaultGameFile) : new File(args[0]);
 
@@ -35,7 +34,7 @@ void main() {
 
     Z.load(gameData);
 
-  } on FileIOException catch (fe){
+  } on FileSystemException catch (fe){
     //TODO log then print friendly
     print('$fe');
     exit(0);

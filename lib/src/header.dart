@@ -121,7 +121,7 @@ class Header{
     Z.machine.mem.storeb(Header.FLAGS2, flags);
   }
    
-  /// Feturns false if the game is a timed game.
+  /// Returns false if the game is a timed game.
   static bool isScoreGame(){
     checkLoaded();
     

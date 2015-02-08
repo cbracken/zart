@@ -55,12 +55,12 @@ class Quetzal {
     //stacks, oldest first
     IFF.writeChunk(saveData, Chunk.Stks);
 
-    var stackData = new Queue<StackFrame>();
+    var stackData = new List<StackFrame>();
 
-    stackData.addFirst(new StackFrame(0,0));
+    stackData.insert(0, new StackFrame(0,0));
 
     while(stackData.first.nextCallStackIndex != null){
-      stackData.addFirst(new StackFrame(stackData.first.nextCallStackIndex, stackData.first.nextEvalStackIndex));
+      stackData.insert(0, new StackFrame(stackData.first.nextCallStackIndex, stackData.first.nextEvalStackIndex));
     }
 
     var totalStackBytes = 0;
@@ -302,21 +302,21 @@ class StackFrame
 {
   int returnAddr;
   int returnVar;
-  final Queue<int> locals;
-  final Queue<int> evals;
+  final List<int> locals;
+  final List<int> evals;
   int nextCallStackIndex;
   int nextEvalStackIndex;
   int totalArgsPassed;
 
   StackFrame.empty()
   :
-    locals = new Queue<int>(),
-    evals = new Queue<int>();
+    locals = new List<int>(),
+    evals = new List<int>();
 
   StackFrame(int callIndex, evalIndex)
   :
-    locals = new Queue<int>(),
-    evals = new Queue<int>()
+    locals = new List<int>(),
+    evals = new List<int>()
   {
     returnAddr = Z.machine.callStack[callIndex];
     returnVar = Z.machine.callStack[++callIndex];
@@ -324,7 +324,7 @@ class StackFrame
     var totalLocals = Z.machine.callStack[++callIndex];
 
     for(int i = 0; i < totalLocals; i++){
-      locals.addFirst(Z.machine.callStack[++callIndex]);
+      locals.insert(0, Z.machine.callStack[++callIndex]);
     }
 
     totalArgsPassed = Z.machine.callStack[++callIndex];
@@ -338,7 +338,7 @@ class StackFrame
     var eStack = Z.machine.stack[evalIndex];
 
     while(eStack != Machine.STACK_MARKER){
-        evals.addFirst(eStack);
+        evals.insert(0, eStack);
         eStack = Z.machine.stack[++evalIndex];
     }
 
@@ -351,13 +351,13 @@ class StackFrame
 
   String toString(){
     var s = new StringBuffer();
-    s.add('return addr: 0x${returnAddr.toRadixString(16)}\n');
-    s.add('return var: 0x${returnVar.toRadixString(16)}\n');
-    s.add('args passed: $totalArgsPassed');
-    s.add('locals: $locals \n');
-    s.add('evals: $evals \n');
-    s.add('nextCallStackIndex: $nextCallStackIndex \n');
-    s.add('nextEvalStackIndex: $nextEvalStackIndex\n\n');
+    s.write('return addr: 0x${returnAddr.toRadixString(16)}\n');
+    s.write('return var: 0x${returnVar.toRadixString(16)}\n');
+    s.write('args passed: $totalArgsPassed');
+    s.write('locals: $locals \n');
+    s.write('evals: $evals \n');
+    s.write('nextCallStackIndex: $nextCallStackIndex \n');
+    s.write('nextEvalStackIndex: $nextEvalStackIndex\n\n');
     return s.toString();
   }
 }

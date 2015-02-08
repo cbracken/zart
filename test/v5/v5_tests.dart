@@ -2,10 +2,8 @@ library v5_tests;
 
 import 'dart:io';
 
-import '../../../../src/lib/unittest/unittest.dart';
-//#import('dart:unittest');
-//^^ not working
-import '../../lib/zart.dart';
+import 'package:unittest/unittest.dart';
+import 'package:zart/zart.dart';
 
 part 'object_tests.dart';
 
@@ -17,7 +15,7 @@ main(){
 
   try{
     Z.load(f.readAsBytesSync());
-  } on FileIOException catch (fe){
+  } on FileSystemException catch (fe){
     //TODO log then print friendly
     print('$fe');
     exit(1);

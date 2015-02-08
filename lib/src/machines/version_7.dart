@@ -12,7 +12,7 @@ class Version7 extends Version5
   }
 
   int pack(int unpackedAddr){
-    throw const NotImplementedException();
+    throw new UnimplementedError();
   }
 
   int unpack_paddr(int packed_print_addr){
@@ -30,6 +30,6 @@ class Version7 extends Version5
 
     Debugger.verbose('${pcHex()} "$str"');
 
-    Z.sbuff.add(str);
+    Z.sbuff.write(str);
   }
 }

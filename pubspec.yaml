@@ -4,7 +4,4 @@ author: John Evans <prujohn@gmail.com>
 homepage: https://github.com/prujohn/zart
 version: 1.0.0
 dependencies:
-  drandom:
-    git: git://github.com/financeCoding/DRandom.git
-  unittest:
-    sdk: unittest
+  unittest: any

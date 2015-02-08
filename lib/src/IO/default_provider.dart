@@ -10,16 +10,16 @@ part of zart_prujohn;
 */
 class DefaultProvider implements IOProvider
 {
-  final Queue<String> script;
+  final List<String> script;
   final int cols = 80;
 
-  DefaultProvider(Collection<String> script)
+  DefaultProvider(Iterable<String> script)
   :
-    script = new Queue<String>.from(script);
+    script = new List<String>.from(script);
 
 
-  Future<Object> command(String JSONCommand){
-
+  Future<Object> command(String JSONCommand) {
+    // FIXME(cbracken) should this be abstract?
   }
 
   Future<bool> saveGame(List<int> saveBytes){
@@ -39,23 +39,23 @@ class DefaultProvider implements IOProvider
   void PrimaryOutput(String text) {
     var lines = text.split('\n');
     for(final l in lines){
-      var words = new Queue<String>.from(l.split(' '));
+      var words = new List<String>.from(l.split(' '));
 
       var s = new StringBuffer();
       while(!words.isEmpty){
-        var nextWord = words.removeFirst();
+        var nextWord = words.removeAt(0);
 
         if (s.length > cols){
           print('$s');
           s = new StringBuffer();
-          s.add('$nextWord ');
+          s.write('$nextWord ');
         }else{
           if (words.isEmpty){
-            s.add('$nextWord ');
+            s.write('$nextWord ');
             print('$s');
             s = new StringBuffer();
           }else{
-            s.add('$nextWord ');
+            s.write('$nextWord ');
           }
         }
       }
@@ -73,7 +73,7 @@ class DefaultProvider implements IOProvider
     Completer c = new Completer();
 
     if (!script.isEmpty){
-      c.complete(script.removeFirst());
+      c.complete(script.removeAt(0));
     }
 
     return c.future;

@@ -33,7 +33,7 @@ class Machine
   // Player input script
   bool outputStream4 = false;
 
-  DRandom r;
+  Random r;
 
   String pcHex({int offset: 0}) => '[0x${(PC + offset).toRadixString(16)}]';
 
@@ -424,13 +424,13 @@ class Machine
     var result = 0;
 
     if (range < 0){
-      r = new DRandom.withSeed(range);
+      r = new Random(range);
       //Debugger.verbose('    (set RNG to seed: $range)');
     }else if(range == 0){
-      r = new DRandom.withSeed(new Date.now().millisecond);
+      r = new Random(new DateTime.now().millisecond);
       //Debugger.verbose('    (set RNG to random seed)');
     }else{
-      result = r.NextFromMax(range) + 1;
+      result = r.nextInt(range) + 1;
       //Debugger.verbose('    (Rolled [1 - $range] number: $result)');
     }
 
@@ -747,7 +747,7 @@ class Machine
   void newline(){
     //Debugger.verbose('${pcHex(-1)} [newline]');
 
-    Z.sbuff.add('\n');
+    Z.sbuff.write('\n');
   }
 
   void print_obj(){
@@ -756,7 +756,7 @@ class Machine
 
     var obj = new GameObject(operand.value);
 
-    Z.sbuff.add(obj.shortName);
+    Z.sbuff.write(obj.shortName);
   }
 
   void print_addr(){
@@ -769,7 +769,7 @@ class Machine
 
     //print('${pcHex()} "$str"');
 
-    Z.sbuff.add(str);
+    Z.sbuff.write(str);
   }
 
   void print_paddr(){
@@ -783,7 +783,7 @@ class Machine
 
     //Debugger.verbose('${pcHex()} "$str"');
 
-    Z.sbuff.add(str);
+    Z.sbuff.write(str);
   }
 
   void print_char(){
@@ -797,7 +797,7 @@ class Machine
       throw new GameException('ZSCII char is out of bounds.');
     }
 
-    Z.sbuff.add(ZSCII.ZCharToChar(z));
+    Z.sbuff.write(ZSCII.ZCharToChar(z));
   }
 
   void print_num(){
@@ -805,7 +805,7 @@ class Machine
 
     var operands = visitOperandsVar(1, false);
 
-    Z.sbuff.add('${toSigned(operands[0].value)}');
+    Z.sbuff.write('${toSigned(operands[0].value)}');
   }
 
   void print_ret(){
@@ -813,7 +813,7 @@ class Machine
 
     var str = ZSCII.readZStringAndPop(PC);
 
-    Z.sbuff.add('${str}\n');
+    Z.sbuff.write('${str}\n');
 
     //Debugger.verbose('${pcHex()} "$str"');
 
@@ -824,7 +824,7 @@ class Machine
     //Debugger.verbose('${pcHex(-1)} [print]');
 
     var str = ZSCII.readZString(PC);
-    Z.sbuff.add(str);
+    Z.sbuff.write(str);
 
     //Debugger.verbose('${pcHex()} "$str"');
 
@@ -1034,7 +1034,7 @@ class Machine
 
     assert(operands[1].value != 0);
 
-    var result = (toSigned(operands[0].value) / toSigned(operands[1].value)).toInt();
+    var result = toSigned(operands[0].value) ~/ toSigned(operands[1].value);
 
     //Debugger.verbose('    >>> (div ${pc.toRadixString(16)}) ${operands[0].value}(${toSigned(operands[0].value)}) / ${operands[1].value}(${toSigned(operands[1].value)}) = $result');
 
@@ -1342,11 +1342,11 @@ class Machine
       return _readLocal(varNum);
     }else if (varNum <= 0xff){
       return mem.readGlobal(varNum);
-    }else{
+    }else {
       return varNum;
-      throw new Exception('Variable referencer byte'
-        ' out of range (0-255): ${varNum}');
     }
+    throw new ArgumentError('Variable referencer byte'
+      ' out of range (0-255): ${varNum}');
   }
 
   int readVariable(int varNum){
@@ -1399,7 +1399,7 @@ class Machine
     stack = new _Stack(),
     callStack = new _Stack.max(1024)
   {
-    r = new DRandom.withSeed(new Date.now().millisecond);
+    r = new Random(new DateTime.now().millisecond);
     ops =
       {
 

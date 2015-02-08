@@ -119,13 +119,13 @@ class Debugger {
 
           for(int i = 0x10; i < 0xff; i++){
 
-            s.add('g${i - 16 < 10 ? "0" : ""}${i - 16}:'
+            s.write('g${i - 16 < 10 ? "0" : ""}${i - 16}:'
             ' 0x${Z.machine.mem.readGlobal(i).toRadixString(16)}');
 
             if ((i - 15) % col != 0){
-              s.add('\t');
+              s.write('\t');
             }else{
-              s.add('\n');
+              s.write('\n');
             }
           }
           debug('$s');
@@ -192,9 +192,9 @@ class Debugger {
 
   static String crashReport(){
     var s = new StringBuffer();
-    s.add('Call Stack: ${Z.machine.callStack}\n');
-    s.add('Game Stack: ${Z.machine.stack}\n');
-    s.add(dumpLocals());
+    s.write('Call Stack: ${Z.machine.callStack}\n');
+    s.write('Game Stack: ${Z.machine.stack}\n');
+    s.write(dumpLocals());
     return s.toString();
   }
 
@@ -203,9 +203,9 @@ class Debugger {
     StringBuffer s = new StringBuffer();
 
     for(int i = 0; i < locals; i++){
-      s.add('(L${i}: 0x${Z.machine._readLocal(i + 1).toRadixString(16)}) ');
+      s.write('(L${i}: 0x${Z.machine._readLocal(i + 1).toRadixString(16)}) ');
     }
-    s.add('\n');
+    s.write('\n');
     return s.toString();
   }
 
@@ -214,29 +214,29 @@ class Debugger {
 
     var s = new StringBuffer();
 
-    s.add('(Story contains ${Z.machine.mem.size} bytes.)\n');
-    s.add('\n');
-    s.add('------- START HEADER -------\n');
-    s.add('Z-Machine Version: ${Z.machine.version}\n');
-    s.add('Flags1(binary): 0b${Z.machine.mem.loadw(Header.FLAGS1).toRadixString(2)}\n');
-    // word after flags1 is used by Inform
-    s.add('Abbreviations Location: 0x${Z.machine.mem.abbrAddress.toRadixString(16)}\n');
-    s.add('Object Table Location: 0x${Z.machine.mem.objectsAddress.toRadixString(16)}\n');
-    s.add('Global Variables Location: 0x${Z.machine.mem.globalVarsAddress.toRadixString(16)}\n');
-    s.add('Static Memory Start: 0x${Z.machine.mem.staticMemAddress.toRadixString(16)}\n');
-    s.add('Dictionary Location: 0x${Z.machine.mem.dictionaryAddress.toRadixString(16)}\n');
-    s.add('High Memory Start: 0x${Z.machine.mem.highMemAddress.toRadixString(16)}\n');
-    s.add('Program Counter Start: 0x${Z.machine.mem.programStart.toRadixString(16)}\n');
-    s.add('Flags2(binary): 0b${Z.machine.mem.loadb(Header.FLAGS2).toRadixString(2)}\n');
-    s.add('Length Of File: ${Z.machine.mem.loadw(Header.LENGTHOFFILE) * Z.machine.fileLengthMultiplier()}\n');
-    s.add('Checksum Of File: ${Z.machine.mem.loadw(Header.CHECKSUMOFFILE)}\n');
+    s.write('(Story contains ${Z.machine.mem.size} bytes.)\n');
+    s.write('\n');
+    s.write('------- START HEADER -------\n');
+    s.write('Z-Machine Version: ${Z.machine.version}\n');
+    s.write('Flags1(binary): 0b${Z.machine.mem.loadw(Header.FLAGS1).toRadixString(2)}\n');
+    //writerd after flags1 is used by Inform
+    s.write('Abbreviations Location: 0x${Z.machine.mem.abbrAddress.toRadixString(16)}\n');
+    s.write('Object Table Location: 0x${Z.machine.mem.objectsAddress.toRadixString(16)}\n');
+    s.write('Global Variables Location: 0x${Z.machine.mem.globalVarsAddress.toRadixString(16)}\n');
+    s.write('Static Memory Start: 0x${Z.machine.mem.staticMemAddress.toRadixString(16)}\n');
+    s.write('Dictionary Location: 0x${Z.machine.mem.dictionaryAddress.toRadixString(16)}\n');
+    s.write('High Memory Start: 0x${Z.machine.mem.highMemAddress.toRadixString(16)}\n');
+    s.write('Program Counter Start: 0x${Z.machine.mem.programStart.toRadixString(16)}\n');
+    s.write('Flags2(binary): 0b${Z.machine.mem.loadb(Header.FLAGS2).toRadixString(2)}\n');
+    s.write('Length Of File: ${Z.machine.mem.loadw(Header.LENGTHOFFILE) * Z.machine.fileLengthMultiplier()}\n');
+    s.write('Checksum Of File: ${Z.machine.mem.loadw(Header.CHECKSUMOFFILE)}\n');
     //TODO v4+ header stuff here
-    s.add('Standard Revision: ${Z.machine.mem.loadw(Header.REVISION_NUMBER)}\n');
-    s.add('-------- END HEADER ---------\n');
+    s.write('Standard Revision: ${Z.machine.mem.loadw(Header.REVISION_NUMBER)}\n');
+    s.write('-------- END HEADER ---------\n');
 
-    //s.add('main Routine: ${Z.machine.mem.getRange(Z.pc - 4, 10)}');
+    //s.write('main Routine: ${Z.machine.mem.getRange(Z.pc - 4, Z.pc - 4 + 10)}');
 
-    s.add('\n');
+    s.write('\n');
     return s.toString();
   }
 
@@ -264,7 +264,7 @@ class Debugger {
         '${message != null ? "TODO: $message" : ""}\n'
       ])
       .then((_) {
-        throw const NotImplementedException();
+        throw new UnimplementedError();
       });
   }
 }

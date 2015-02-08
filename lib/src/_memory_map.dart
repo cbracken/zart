@@ -110,25 +110,23 @@ class _MemoryMap {
    if ((address == null) || (address < 0) || (address > _mem.length - 1)){
 
     // Debugger.debug('out of bounds memory. upper: ${_mem.length}, address: $address');
-
      throw new GameException('Attempted access to memory address'
        ' that is out of bounds: $address 0x${address.toRadixString(16)}');
    }
   }
 
   String dump(int address, int howMany){
-    var map = getRange(address, howMany).map((o)=> '0x${o.toRadixString(16)}');
+    var map = getRange(address, address + howMany).map((o)=> '0x${o.toRadixString(16)}');
     return '$map';
   }
 
   List getRange(int address, int howMany){
     checkBounds(address);
     checkBounds(address + howMany);
-    return _mem.getRange(address, howMany);
+    return _mem.sublist(address, address + howMany);
   }
 
   int get size => _mem.length;
-
 }
 
 

@@ -3,9 +3,9 @@ part of z_console;
 /** A basic console provider with word-wrap support. */
 class ConsoleProvider implements IOProvider
 {
-  final StringInputStream textStream = new StringInputStream(stdin);
-  final Queue<String> lineBuffer = new Queue<String>();
-  final Queue<String> outputBuffer = new Queue<String>();
+  final Stdin textStream = stdin;
+  final List<String> lineBuffer = new List<String>();
+  final List<String> outputBuffer = new List<String>();
 
   final int cols = 80;
 
@@ -14,7 +14,7 @@ class ConsoleProvider implements IOProvider
   Future<Object> command(String JSONCommand){
     var c = new Completer();
 
-    var msgSet = JSON.parse(JSONCommand);
+    var msgSet = JSON.decode(JSONCommand);
 
     var cmd = IOCommands.toIOCommand(msgSet[0]);
 
@@ -74,8 +74,10 @@ class ConsoleProvider implements IOProvider
     print('(Caution: will overwrite existing file!)');
     print('Enter file name to save to (no extension):');
 
-    textStream.onLine = (){
-      var fn = textStream.readLine();
+    textStream
+        .transform(UTF8.decoder)
+        .transform(const LineSplitter())
+        .listen((fn) {
       if (fn == null || fn.isEmpty)
       {
         print('Invalid file name given.');
@@ -84,17 +86,16 @@ class ConsoleProvider implements IOProvider
         try{
           print('Saving game "${fn}.sav".  Use "restore" to restore it.');
           File f2 = new File('games${Platform.pathSeparator}${fn}.sav');
-          OutputStream s = f2.openOutputStream();
-          s.writeFrom(saveBytes);
+          IOSink s = f2.openWrite();
+          s.write(saveBytes);
           s.close();
           c.complete(true);
-        }on FileIOException catch(e){
+        }on FileSystemException catch(e){
           print('File IO error.');
           c.complete(false);
         }
       }
-    };
-
+    });
     return c.future;
   }
 
@@ -102,8 +103,10 @@ class ConsoleProvider implements IOProvider
     var c = new Completer();
     print('Enter game file name to load (no extension):');
 
-    textStream.onLine = (){
-      var fn = textStream.readLine();
+    textStream
+        .transform(UTF8.decoder)
+        .transform(const LineSplitter())
+        .listen((fn) {
       if (fn == null || fn.isEmpty)
       {
         print('Invalid file name given.');
@@ -113,12 +116,12 @@ class ConsoleProvider implements IOProvider
           print('Restoring game "${fn}.sav"...');
           File f2 = new File('games${Platform.pathSeparator}${fn}.sav');
           c.complete(f2.readAsBytesSync());
-        }on FileIOException catch(e){
+        }on FileSystemException catch(e){
           print('File IO error.');
           c.complete(null);
         }
       }
-    };
+    });
 
     return c.future;
   }
@@ -130,31 +133,31 @@ class ConsoleProvider implements IOProvider
     }
     var lines = text.split('\n');
     for(final l in lines){
-      var words = new Queue<String>.from(l.split(' '));
+      var words = new List<String>.from(l.split(' '));
 
       var s = new StringBuffer();
       while(!words.isEmpty){
-        var nextWord = words.removeFirst();
+        var nextWord = words.removeAt(0);
 
         if (s.length > cols){
-          outputBuffer.addFirst('$s');
+          outputBuffer.insert(0, '$s');
           print('$s');
           s = new StringBuffer();
-          s.add('$nextWord ');
+          s.write('$nextWord ');
         }else{
           if (words.isEmpty){
-            s.add('$nextWord ');
-            outputBuffer.addFirst('$s');
+            s.write('$nextWord ');
+            outputBuffer.insert(0, '$s');
             print('$s');
             s = new StringBuffer();
           }else{
-            s.add('$nextWord ');
+            s.write('$nextWord ');
           }
         }
       }
 
       if (s.length > 0){
-        outputBuffer.addFirst('$s');
+        outputBuffer.insert(0, '$s');
         print('$s');
         s = new StringBuffer();
       }
@@ -194,8 +197,10 @@ class ConsoleProvider implements IOProvider
     if (!lineBuffer.isEmpty){
       c.complete(lineBuffer.removeLast());
     }else{
-      textStream.onLine = (){
-        var line = textStream.readLine();
+      textStream
+          .transform(UTF8.decoder)
+          .transform(const LineSplitter())
+          .listen((line) {
         if (line == null){
           c.complete('');
         }else{
@@ -205,7 +210,7 @@ class ConsoleProvider implements IOProvider
             c.complete(line);
           }
         }
-      };
+      });
     }
 
     return c.future;

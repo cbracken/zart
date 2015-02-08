@@ -10,10 +10,10 @@ void objectTestsV5(){
 
       // check if we have the right object and
       // assumptions are correct.
-      Expect.equals('*GOLDEN FISH*', o1.shortName);
-      Expect.equals(16, o1.parent);
-      Expect.equals(19, o1.sibling);
-      Expect.equals(0, o1.child);
+      expect('*GOLDEN FISH*', o1.shortName);
+      expect(16, o1.parent);
+      expect(19, o1.sibling);
+      expect(0, o1.child);
 
       var ls = o1.leftSibling(); //19
       var p = new GameObject(16); //lakeside
@@ -21,10 +21,10 @@ void objectTestsV5(){
       o1.removeFromTree();
       //check that 2 is now the sibling of o1's
       //left sibling
-      Expect.equals(19, new GameObject(ls).sibling);
+      expect(19, new GameObject(ls).sibling);
 
-      Expect.equals(0, o1.parent);
-      Expect.equals(0, o1.sibling);
+      expect(0, o1.parent);
+      expect(0, o1.sibling);
     });
 
     test('insert', (){
@@ -33,30 +33,30 @@ void objectTestsV5(){
       var oc = p.child;
 
       o1.insertTo(p.id);
-      Expect.equals(p.id, o1.parent);
+      expect(p.id, o1.parent);
 
-      Expect.equals(18, p.child);
-      Expect.equals(oc, o1.sibling);
+      expect(18, p.child);
+      expect(oc, o1.sibling);
     });
 
     test('get property length', (){
       GameObject o1 = new GameObject(18); //"golden fish"
 
-      Expect.equals(2, GameObject.propertyLength(o1.getPropertyAddress(27) - 1));
-      Expect.equals(2, GameObject.propertyLength(o1.getPropertyAddress(4) - 1));
-      Expect.equals(2, GameObject.propertyLength(o1.getPropertyAddress(2) - 1));
-      Expect.equals(6, GameObject.propertyLength(o1.getPropertyAddress(1) - 1));
+      expect(2, GameObject.propertyLength(o1.getPropertyAddress(27) - 1));
+      expect(2, GameObject.propertyLength(o1.getPropertyAddress(4) - 1));
+      expect(2, GameObject.propertyLength(o1.getPropertyAddress(2) - 1));
+      expect(6, GameObject.propertyLength(o1.getPropertyAddress(1) - 1));
     });
-    
-    test('get property', (){
-      GameObject o1 = new GameObject(18); //"golden fish";      Expect.equals('*GOLDEN FISH*', o1.shortName);
 
-      Expect.equals(0x22da, o1.getPropertyValue(4), 'get property #4');
-      Expect.equals(0x0007, o1.getPropertyValue(2), 'get property #4');
-      
+    test('get property', (){
+      GameObject o1 = new GameObject(18); //"golden fish";      expect('*GOLDEN FISH*', o1.shortName);
+
+      expect(0x22da, o1.getPropertyValue(4));
+      expect(0x0007, o1.getPropertyValue(2));
+
       //throw on property len > 2
-      Expect.throws(() => o1.getPropertyValue(1),
-          (e) =>GameException);
+      expect(() => o1.getPropertyValue(1),
+          throwsA(new isInstanceOf<GameException>()));
 
     });
 
@@ -65,99 +65,95 @@ void objectTestsV5(){
 
       var addr = o1.getPropertyAddress(4);
 
-      Expect.equals(0x868, addr);
+      expect(0x868, addr);
 
       var pnum = GameObject.propertyNumber(addr - 1);
 
-      Expect.equals(4, pnum);
+      expect(4, pnum);
 
       var val = o1.getPropertyValue(pnum);
 
-      Expect.equals(0x22da, val);
+      expect(0x22da, val);
 
       addr = o1.getPropertyAddress(pnum);
 
-      Expect.equals(0x868, addr);
+      expect(0x868, addr);
 
       addr = o1.getPropertyAddress(0);
-      Expect.equals(0, addr);
+      expect(0, addr);
 
     });
-    
-    
+
+
     test('get next property', (){
       GameObject o1 = new GameObject(18); //"golden fish";
 
-      Expect.equals('*GOLDEN FISH*', o1.shortName);
+      expect('*GOLDEN FISH*', o1.shortName);
 
-      Expect.equals(4, o1.getNextProperty(27));
-      Expect.equals(2, o1.getNextProperty(4));
-      Expect.equals(1, o1.getNextProperty(2));
-      Expect.equals(27, o1.getNextProperty(0));
+      expect(4, o1.getNextProperty(27));
+      expect(2, o1.getNextProperty(4));
+      expect(1, o1.getNextProperty(2));
+      expect(27, o1.getNextProperty(0));
 
-      Expect.throws(
-        () => o1.getNextProperty(19),
-        (e) => e is GameException
-        );
+      expect(() => o1.getNextProperty(19),
+          throwsA(new isInstanceOf<GameException>()));
 
     });
 
     test('set property', (){
       GameObject o1 = new GameObject(18); //"golden fish";
 
-      Expect.equals('*GOLDEN FISH*', o1.shortName);
+      expect('*GOLDEN FISH*', o1.shortName);
 
       o1.setPropertyValue(4, 0xffff);
       //should truncate to 0xff since prop #30 is len 1
-      Expect.equals(0xffff, o1.getPropertyValue(4));
+      expect(0xffff, o1.getPropertyValue(4));
 
       //throw on prop no exist
-      Expect.throws(
-        () => o1.setPropertyValue(13, 0xffff),
-          (e) => e is GameException);
+      expect(() => o1.setPropertyValue(13, 0xffff),
+          throwsA(new isInstanceOf<GameException>()));
 
       //throw on prop len > 2
-      Expect.throws(
-        () => o1.setPropertyValue(1, 0xffff),
-          (e) => e is GameException);
+      expect(() => o1.setPropertyValue(1, 0xffff),
+          throwsA(new isInstanceOf<GameException>()));
 
     });
 
     test('attributes are set', (){
       GameObject o1 = new GameObject(58);// "the door";
 
-      Expect.equals('the door', o1.shortName);
+      expect('the door', o1.shortName);
 
-      Expect.isTrue(o1.isFlagBitSet(6));
-      Expect.isTrue(o1.isFlagBitSet(12));
-      Expect.isTrue(o1.isFlagBitSet(13));
-      Expect.isTrue(o1.isFlagBitSet(17));
-      Expect.isTrue(o1.isFlagBitSet(21));
+      expect(o1.isFlagBitSet(6), isTrue);
+      expect(o1.isFlagBitSet(12), isTrue);
+      expect(o1.isFlagBitSet(13), isTrue);
+      expect(o1.isFlagBitSet(17), isTrue);
+      expect(o1.isFlagBitSet(21), isTrue);
 
       //check some that aren't set:
-      Expect.isFalse(o1.isFlagBitSet(1));
-      Expect.isFalse(o1.isFlagBitSet(5));
-      Expect.isFalse(o1.isFlagBitSet(7));
-      Expect.isFalse(o1.isFlagBitSet(11));
-      Expect.isFalse(o1.isFlagBitSet(14));
-      Expect.isFalse(o1.isFlagBitSet(16));
-      Expect.isFalse(o1.isFlagBitSet(18));
-      Expect.isFalse(o1.isFlagBitSet(40));
+      expect(o1.isFlagBitSet(1), isFalse);
+      expect(o1.isFlagBitSet(5), isFalse);
+      expect(o1.isFlagBitSet(7), isFalse);
+      expect(o1.isFlagBitSet(11), isFalse);
+      expect(o1.isFlagBitSet(14), isFalse);
+      expect(o1.isFlagBitSet(16), isFalse);
+      expect(o1.isFlagBitSet(18), isFalse);
+      expect(o1.isFlagBitSet(40), isFalse);
     });
 
     test ('unset attribute', (){
       GameObject o1 = new GameObject(58);// "the door";
-      Expect.isTrue(o1.isFlagBitSet(6));
+      expect(o1.isFlagBitSet(6), isTrue);
       o1.unsetFlagBit(6);
-      Expect.isFalse(o1.isFlagBitSet(6));
+      expect(o1.isFlagBitSet(6), isFalse);
 
-      Expect.isTrue(o1.isFlagBitSet(12));
+      expect(o1.isFlagBitSet(12), isTrue);
       o1.unsetFlagBit(12);
-      Expect.isFalse(o1.isFlagBitSet(12));
+      expect(o1.isFlagBitSet(12), isFalse);
 
-      Expect.isTrue(o1.isFlagBitSet(17));
+      expect(o1.isFlagBitSet(17), isTrue);
       o1.unsetFlagBit(17);
-      Expect.isFalse(o1.isFlagBitSet(17));
+      expect(o1.isFlagBitSet(17), isFalse);
 
       o1.setFlagBit(6);
       o1.setFlagBit(12);
@@ -166,17 +162,17 @@ void objectTestsV5(){
 
     test('set attribute', (){
       GameObject o1 = new GameObject(58);// "the door";
-      Expect.isFalse(o1.isFlagBitSet(1), '1');
+      expect(o1.isFlagBitSet(1), isFalse);
       o1.setFlagBit(1);
-      Expect.isTrue(o1.isFlagBitSet(1));
+      expect(o1.isFlagBitSet(1), isTrue);
 
-      Expect.isFalse(o1.isFlagBitSet(0), '0');
+      expect(o1.isFlagBitSet(0), isFalse);
       o1.setFlagBit(0);
-      Expect.isTrue(o1.isFlagBitSet(0));
+      expect(o1.isFlagBitSet(0), isTrue);
 
-      Expect.isFalse(o1.isFlagBitSet(47), '47');
+      expect(o1.isFlagBitSet(47), isFalse);
       o1.setFlagBit(47);
-      Expect.isTrue(o1.isFlagBitSet(47));
+      expect(o1.isFlagBitSet(47), isTrue);
 
       o1.unsetFlagBit(1);
       o1.unsetFlagBit(0);

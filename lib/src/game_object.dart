@@ -298,7 +298,7 @@ class GameObject
     var s = new StringBuffer();
     for (int i = 0; i <= (Z.machine.version.toInt() <= 3 ? 31 : 47); i++){
       if (BinaryHelper.isSet(flags, (Z.machine.version.toInt() <= 3 ? 31 : 47) - i)){
-        s.add('[$i] ');
+        s.write('[$i] ');
       }
     }
     
