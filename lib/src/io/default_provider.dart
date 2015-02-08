@@ -3,7 +3,7 @@ part of zart_prujohn;
 /**
 * Default provider with word-wrap support.
 *
-* Cannot take input because it has no IO
+* Cannot take input because it has no io
 * context.  Also cannot provide async facility
 * so just runs sync.
 *
