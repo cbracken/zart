@@ -173,9 +173,10 @@ class ConsoleProvider implements IOProvider
       c.complete(lineBuffer.removeLast());
     }else{
       //flush?
-      textStream.read();
-      textStream.onData = (){
-        var line = textStream.readLine();
+      textStream
+          .transform(new Utf8Decoder())
+          .transform(new LineSplitter())
+          .listen((line) {
         if (line == null){
           c.complete('');
         }else{
@@ -185,7 +186,7 @@ class ConsoleProvider implements IOProvider
             c.complete(line[0]);
           }
         }
-      };
+      });
     }
 
     return c.future;
