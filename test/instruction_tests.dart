@@ -97,7 +97,8 @@ instructionTests(){
 
   runRoutine([param1, param2, param3]){
 
-    var operandList = createVarParamList(Z.machine.pack(testRoutineAddr), param1, param2, param3);
+    var operandList = createVarParamList(Z.machine.pack(testRoutineAddr), param1, param2, param3)
+        .map((v) => new Operand(v)).toList();
     Debugger.isUnitTestRun = true;
     Z.quit = false;
 
