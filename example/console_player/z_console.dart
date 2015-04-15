@@ -38,7 +38,7 @@ void main(List<String> args) {
     //TODO log then print friendly
     print('$fe');
     exit(0);
-  } on Exception catch (e){
+  } on Error catch (e){
     //TODO log then print friendly
     print('$e');
     exit(0);
@@ -61,7 +61,7 @@ void main(List<String> args) {
   }on GameException catch(ge){
     print('A game error occurred.');
     exit(1);
-  }on Exception catch(e){
+  }on Error catch(e){
     print('A system error occurred.');
     exit(1);
   }

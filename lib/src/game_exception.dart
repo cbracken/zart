@@ -12,7 +12,7 @@ class GameException implements Exception
   String toString() {
     try{
       return 'Z-Machine exception: [0x${addr.toRadixString(16)}] $msg\n${Debugger.crashReport()}';
-    } on Exception catch (e){
+    } on Error catch (e){
       return msg;
     }
   }

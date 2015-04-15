@@ -19,7 +19,7 @@ main(){
     //TODO log then print friendly
     print('$fe');
     exit(1);
-  } on Exception catch (e){
+  } on Error catch (e){
     //TODO log then print friendly
     print('$e');
     exit(1);
